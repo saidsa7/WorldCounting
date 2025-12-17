@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup Page</title>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      #emailError,
+      #passwordError {
+        color: rgb(210, 21, 21);
+        font-size: 1 rem;
+        margin-left: 0.45rem;
+        font-weight: 200;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-900">
+    <!-- Navbar -->
+    <%- include('../components/navbar' , {currentPage : "signup"}) %>
+
+    <!-- Signup Form Container -->
+    <div class="flex justify-center items-center mt-60">
+      <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center mb-6 text-white">Sign up</h2>
+
+        <form id="signupForm" class="space-y-5">
+          <!-- Username -->
+          <div>
+            <label class="block text-gray-100 mb-1">Username</label>
+            <input
+              id="usernameId"
+              type="text"
+              name="username"
+              required
+              class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-gray-100 mb-1">Email</label>
+            <input
+              id="emailId"
+              type="text"
+              name="email"
+              required
+              class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <p id="emailError"></p>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="block text-gray-100 mb-1">Password</label>
+            <input
+              id="passwordId"
+              type="password"
+              name="password"
+              required
+              class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <p id="passwordError"></p>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full bg-blue-900 text-white p-2 rounded hover:bg-blue-800 transition"
+          >
+            Create Account
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      let emailError = document.getElementById("emailError");
+      let passwordError = document.getElementById("passwordError");
+
+      let theUsername = document.getElementById("usernameId");
+      let theEmail = document.getElementById("emailId");
+      let thePassword = document.getElementById("passwordId");
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          emailError.innerText = "";
+          passwordError.innerText = "";
+          const theResponse = await fetch("/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: theUsername.value,
+              email: theEmail.value,
+              password: thePassword.value,
+            }),
+          });
+
+          const data = await theResponse.json();
+          if (data.validationErrors) {
+            for (let error of data.validationErrors) {
+              if (error.path === "email") {
+                emailError.innerText = error.msg;
+              }
+              if (error.path === "password") {
+                passwordError.innerText = error.msg;
+              }
+            }
+          } else if (data.isExistingEmail) {
+            emailError.innerText = data.isExistingEmail;
+          } else if (data.id) {
+            // Successful signup, redirect to home
+            window.location.href = "/home";
+            console.log(data.id);
+          }
+        });
+    </script>
+  </body>
+</html>
+
+<!-- passwordId
+emailId
+usernameId
+
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const res = await fetch("/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: e.target.username.value,
+              email: e.target.email.value,
+              password: e.target.password.value,
+            }),
+          });
+
+          console.log(e.target.username.value);
+        }); -->

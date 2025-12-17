@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> -->
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+
+        background-color: rgb(53, 53, 118);
+        color: antiquewhite;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- navbar -->
+    <%- include('components/navbar',{currentPage : "home"}) %>
+    <form action="/" method="POST" class="mt-20 mx-20">
+      <textarea
+        oninput="counting()"
+        id="myText"
+        class="border border-gray-400 rounded-lg p-4 w-full h-40 text-black bg-emerald-100"
+        placeholder=" put your text here.."
+        name="text"
+      ></textarea>
+
+      <br />
+      <br />
+      <div class="mt-6" style="display: flex; gap: 100px">
+        <label
+          class="bg-cyan-700 flex justify-center items-center p-3 pt-2 rounded-sm"
+          >Total of Words :
+        </label>
+        <div style="font-size: 50px" id="total"></div>
+        <label
+          class="bg-cyan-700 text-center flex justify-center items-center p-3 pt-2 rounded-sm"
+          >Words without repetition :</label
+        >
+        <h1 style="font-size: 50px" id="count"></h1>
+        <input type="hidden" id="totalInput" name="totalWords" />
+        <input type="hidden" id="countInput" name="totalWordsWithout" />
+
+        <button type="submit" class="bg-purple-700 rounded-md p-5 text-xl">
+          Save Text
+        </button>
+      </div>
+    </form>
+    <!-- TABLE -->
+    <table class="mt-36 min-w-fit border border-blue-700 mx-20">
+      <thead class="bg-oramge-200">
+        <tr>
+          <th class="border px-4 py-2 text-left">Text</th>
+          <th class="border px-4 py-2 text-left">Total (repetition)</th>
+          <th class="border px-4 py-2 text-left">Total (without repetition)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border px-4 py-2">1</td>
+          <td class="border px-4 py-2">سعيد</td>
+          <td class="border px-4 py-2">25</td>
+        </tr>
+        <tr class="">
+          <td class="border px-4 py-2">2</td>
+          <td class="border px-4 py-2">أحمد</td>
+          <td class="border px-4 py-2">30</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- js code -->
+    <script>
+      function counting() {
+        let text = document.getElementById("myText").value;
+
+        const words = text.trim().split(/\s+/).filter(Boolean);
+        console.log(words);
+        const uniqueWords = new Set(words);
+
+        let myCount = document.getElementById("count");
+        document.getElementById("total").innerText = words.length;
+        myCount.innerText = uniqueWords.size;
+
+        document.getElementById("totalInput").value = words.length;
+        document.getElementById("countInput").value = uniqueWords.size;
+      }
+    </script>
+  </body>
+</html>
