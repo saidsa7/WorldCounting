@@ -25,8 +25,8 @@ const checkIfUser = (req, res, next) => {
         next();
       } else {
         const loginUser = await authUserText.findById(decoded.id);
-        console.log("decoded object : ", decoded);
-        console.log("big object from DB : ", loginUser);
+        // console.log("decoded object : ", decoded);
+        // console.log("big object from DB : ", loginUser);
         res.locals.user = loginUser;
         next();
       }

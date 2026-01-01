@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: rgb(53, 53, 118);
+        color: antiquewhite;
+      }
+      #editBtn {
+        background-color: rgb(202, 153, 62);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 50px;
+        color: black;
+        font-weight: bold;
+      }
+      #deleteBtn {
+        background-color: rgba(255, 0, 0, 0.572);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 15px;
+        color: black;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('components/navbar',{currentPage : "edit"}) %>
+
+    <div class="container m-20">
+      <form
+        id="theForm"
+        action="/edit/<%= text._id %>?_method=PUT"
+        method="POST"
+      >
+        <h1 id="title" contenteditable="true"><%= text.title %></h1>
+        <p id="text" contenteditable="true" class="outline-none">
+          <%= text.text %>
+        </p>
+        <input name="title" id="titleInput" type="hidden" />
+        <input name="text" id="textInput" type="hidden" />
+        <button type="submit" id="editBtn">Save Changes</button>
+      </form>
+
+      <form action="/delete/<%= text._id %>" method="POST">
+        <button id="deleteBtn">Delete Text</button>
+      </form>
+    </div>
+
+    <script>
+      const form = document.getElementById("theForm");
+      const myTitle = document.getElementById("title");
+      const myText = document.getElementById("text");
+      const titleInput = document.getElementById("titleInput");
+      const textInput = document.getElementById("textInput");
+
+      form.addEventListener("submit", (e) => {
+        titleInput.value = myTitle.innerText;
+        textInput.value = myText.innerText;
+
+        if (titleInput.value.trim() === "" || textInput.value.trim() === "") {
+          e.preventDefault();
+          alert("Title and Text cannot be empty!");
+        }
+      });
+    </script>
+  </body>
+</html>

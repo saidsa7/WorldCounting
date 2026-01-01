@@ -10,6 +10,7 @@ const authUserSchema = new Schema({
 
   texts: [
     {
+      title: { type: String, trim: true },
       text: { type: String, trim: true },
       wordsTotal: { type: String, trim: true },
       withoutRepetition: { type: String, trim: true },

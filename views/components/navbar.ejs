@@ -9,24 +9,38 @@
   </head>
   <body>
     <nav class="bg-gray-800 text-white p-4">
-      <div class="container mx-auto flex justify-between items-center">
+      <div class="container  mx-auto flex justify-between items-center">
         <!-- Logo -->
         <a href="/home" class="text-2xl font-bold">WordCounter</a>
 
         <!-- Desktop Links -->
-        <ul class="hidden md:flex space-x-6">
+        <ul class=" hidden md:flex space-x-6">
+         
           <li>
             <a
               href="/home"
-              class="hover:text-gray-300 <%= currentPage === "home" ? "bg-gray-600" : null %> p-2 rounded-lg"
+              class=" hover:text-gray-300 <%= currentPage === "home" ? "bg-gray-600" : null %> p-2 rounded-lg"
               >Home</a
             >
           </li>
+          
              <% if (user) { %>
+                <li  >
+            <form  action="/search" method="post" >
+                <input  name="searchTerm" style="color: black;" type="text">
+               
+            <button
+             
+              class="ml-2  hover:text-gray-300 <%= currentPage === "search" ? "bg-gray-600" : null %>  rounded-lg px-2 "
+              >search</button
+            >
+            </form>
+          
+          </li>
                 <h4> Welcome <%= user.username %></h4>  
 
           <li>
-            <a href="/logout" class="hover:text-gray-300  p-2 rounded-lg"
+            <a href="/logout" class="hover:text-gray-300  p-2 rounded-lg  "
               >Logout</a
             >
           </li>
@@ -60,7 +74,7 @@
         class="md:hidden hidden flex-col space-y-4 mt-4 pl-4 pb-4"
       >
         <li>
-          <a href="/hom" class="block hover:text-gray-300 <%= currentPage === "home" ? "bg-gray-600" : null %> p-2 rounded-lg"
+          <a href="/home" class="block hover:text-gray-300 <%= currentPage === "home" ? "bg-gray-600" : null %> p-2 rounded-lg"
             >Home</a
           >
         </li>
@@ -76,5 +90,7 @@
         </li>
       </ul>
     </nav>
+    <script>
+    </script>
   </body>
 </html>

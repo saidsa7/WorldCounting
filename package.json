@@ -17,11 +17,16 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-validator": "^7.3.1",
+    "flowbite": "^4.0.1",
     "jsonwebtoken": "^9.0.3",
     "livereload": "^0.10.3",
+    "method-override": "^3.0.0",
     "mongoose": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "autoprefixer": "^10.4.23",
+    "nodemon": "^3.1.11",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
   }
 }

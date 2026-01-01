@@ -39,8 +39,20 @@ router.post(
   userController.user_signup_post
 );
 // add text
-router.post("/home", (req, res) => {
-  res.render("index.ejs");
-});
+router.post("/add", userController.user_index_post);
 
+// delete text
+router.post("/delete/:id", userController.user_delete_text);
+
+// edit text page (GET update)
+router.get("/edit/:id", requireAuth, userController.user_edit_get);
+
+// edit text (put)
+router.put("/edit/:id", requireAuth, userController.user_edit_put);
+
+// search page
+router.post("/search", requireAuth, userController.user_search_post);
+
+// test get endpoint
+router.get("/test", userController.user_test_get);
 module.exports = router;

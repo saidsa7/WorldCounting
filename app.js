@@ -7,11 +7,13 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var cookieParser = require("cookie-parser");
 require("dotenv").config();
-app.use(express.json());
+const methodOverride = require("method-override");
 
 const allRoutes = require("./routes/allRoutes");
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(methodOverride("_method"));
 
 const { check } = require("express-validator");
 // import middleware
