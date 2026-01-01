@@ -122,7 +122,11 @@
 
             <!-- copy text icon -->
             <div class="flex items-center gap-2">
-              <button onclick="copyText(<%= JSON.stringify(el.text) %>, this)">
+              <button
+                data-text="<%=el.text %>"
+                onclick="copyText( this)"
+                class="text-4xl"
+              >
                 📋
               </button>
             </div>
@@ -155,11 +159,12 @@
       }
 
       // Copy text to clipboard logic
-      function copyText(text, btn) {
+      function copyText(btn) {
         navigator.clipboard
-          .writeText(text)
+          .writeText(btn.dataset.text)
           .then(() => {
-            console.log("The btn : ", btn);
+            // console.log("The btn : ", btn);
+            // console.log("Text sendet via data-text:", btn.dataset.text);
             btn.innerText = "✅";
             setTimeout(() => {
               btn.innerText = "📋";
