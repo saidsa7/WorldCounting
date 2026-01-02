@@ -25,7 +25,12 @@ const user_view_get = (req, res) => {
 
 // welcome page :
 const user_welcome_get = (req, res) => {
-  res.render("welcome");
+  let decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
+  if (decoded) {
+    res.redirect("/home");
+  } else {
+    res.redirect("/login");
+  }
 };
 
 // login page :
@@ -170,6 +175,7 @@ const user_search_post = async (req, res) => {
       return res.render("search", {
         textsArr: [],
         regex: "",
+        searchTerm: "",
       });
     }
 

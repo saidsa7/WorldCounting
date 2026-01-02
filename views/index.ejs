@@ -99,7 +99,7 @@
             >
               <div class="bg-white p-6 rounded-lg shadow-lg w-80">
                 <p class="mb-4 text-gray-800">
-                  Are you sure you want to delete "<%= el.title %>"?
+                  delete <%= el.title ? el.title :"the Text" %> ?
                 </p>
                 <div class="flex justify-end gap-2">
                   <form action="/delete/<%= el.id %>" method="POST">
@@ -139,6 +139,7 @@
 
     <!-- Scripts -->
     <script>
+      // copunting words logic
       function counting() {
         let text = document.getElementById("myText").value;
         const words = text.trim().split(/\s+/).filter(Boolean);
@@ -150,6 +151,7 @@
         document.getElementById("countInput").value = uniqueWords.size;
       }
 
+      //  Modal logic
       function openModal(id) {
         document.getElementById("modal-" + id).classList.remove("hidden");
       }
