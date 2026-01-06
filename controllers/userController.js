@@ -24,21 +24,7 @@ const user_view_get = (req, res) => {
 };
 
 // welcome page :
-// const user_welcome_get = (req, res) => {
-//   let decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
-//   if (decoded) {
-//     res.redirect("/home");
-//   } else {
-//     res.redirect("/login");
-//   }
-// };
-// welcome page :
-
 const user_welcome_get = (req, res) => {
-  if (!req.cookies.jwt) {
-    return res.redirect("/login");
-  }
-
   try {
     jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
     res.redirect("/home");
