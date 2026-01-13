@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.3",
     "livereload": "^0.10.3",
     "method-override": "^3.0.0",
-    "mongoose": "^9.0.0"
+    "mongoose": "^9.0.0",
+    "wink-lemmatizer": "^3.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.23",

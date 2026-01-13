@@ -8,11 +8,14 @@ body {
 .open-btn {
   margin: 16px;
   padding: 10px 16px;
-  background-color: #2563eb;
+  background-color: #264381;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  /* place this btn in same line with WordConter of the navbar */
+  position: relative;
+  bottom: 70px;
 }
 
 /* الخلفية السوداء */
