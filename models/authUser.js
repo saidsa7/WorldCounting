@@ -10,13 +10,8 @@ const authUserSchema = new Schema({
 
   texts: [
     {
-      title: { type: String, trim: true },
-      text: { type: String, trim: true },
-      wordsTotal: { type: String, trim: true },
-      withoutRepetition: { type: String, trim: true },
-      //   createdAt: Date,
-      //   updatedAt: Date,
-      // updatedAt: { type: Date, default: Date.now},
+      type: Schema.Types.ObjectId,
+      ref: "texts",
     },
   ],
 });
@@ -30,7 +25,7 @@ authUserSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-const AuthUserText = mongoose.model("UserText", authUserSchema);
+const AuthUserText = mongoose.model("User", authUserSchema);
 module.exports = AuthUserText;
 
 // ss
