@@ -49,7 +49,7 @@ mongoose
   .then(() => {
     app.listen(port, () => {
       console.log(
-        `Example app listening on port ${port} the link is http://localhost:${port}/ `
+        `Example app listening on port ${port} the link is http://localhost:${port}/ `,
       );
     });
   })

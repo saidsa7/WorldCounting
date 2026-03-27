@@ -32,3 +32,5 @@ authUserSchema.pre("save", async function () {
 
 const AuthUserText = mongoose.model("UserText", authUserSchema);
 module.exports = AuthUserText;
+
+// ss
