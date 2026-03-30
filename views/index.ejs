@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Home</title>
   </head>
   <body class="bg-slate-900 text-slate-200 font-sans">
     <%- include('components/navbar',{currentPage : "home"}) %>
@@ -162,9 +162,13 @@
       // copunting words logic
       function counting() {
         let text = document.getElementById("myText").value;
-        const words = text.trim().split(/\s+/).filter(Boolean);
+        const words = text.trim() //
+        .toLowerCase()
+        .replace(/[^\p{L}\s]/gu, "") // إزالة علامات الترقيم;
+        .split(/\s+/) // تقسيم النص إلى كلمات بناءً على الفراغات
+        .filter(Boolean); // إزالة العناصر الفارغة
         const uniqueWords = new Set(words);
-
+        console.log("Words: ", words);
         document.getElementById("total").innerText = words.length;
         document.getElementById("count").innerText = uniqueWords.size;
         document.getElementById("totalInput").value = words.length;

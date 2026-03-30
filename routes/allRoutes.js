@@ -4,7 +4,7 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const authUserText = require("../models/authUser");
+const authUser = require("../models/authUser");
 
 const { checkIfUser, requireAuth } = require("../middleware/middleware");
 const userController = require("../controllers/userController");
@@ -33,10 +33,10 @@ router.post(
     check("email", "Please provide a valid email").isEmail(),
     check(
       "password",
-      "Password must be at least 8 characters with 1 upper case letter and 1 number"
+      "Password must be at least 8 characters with 1 upper case letter and 1 number",
     ).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/),
   ],
-  userController.user_signup_post
+  userController.user_signup_post,
 );
 // add text
 router.post("/add", userController.user_index_post);

@@ -1,7 +1,8 @@
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const authUserText = require("../models/authUser");
+const AuthUser = require("../models/authUser");
+const Text = require("../models/texts");
 
 // logout
 const user_logout_get = (req, res) => {
@@ -12,10 +13,9 @@ const user_logout_get = (req, res) => {
 // home page :
 const user_index_get = async (req, res) => {
   const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
-  const user = await authUserText.findOne({ _id: decoded.id });
-  console.log(user.texts);
-  // console.log(texts);
-  res.render("index", { textsArr: user.texts });
+  const texts = await Text.find({ user: decoded.id });
+
+  res.render("index", { textsArr: texts });
 };
 
 // view text details :
@@ -41,7 +41,7 @@ const user_login_get = (req, res) => {
 // POST login page :
 const user_login_post = async (req, res) => {
   try {
-    const user = await authUserText.findOne({ email: req.body.email });
+    const user = await AuthUser.findOne({ email: req.body.email });
     // console.log("the req body is : ", req.body);
     // console.log("the user is : ", user);
     if (!user) {
@@ -77,12 +77,12 @@ const user_signup_post = async (req, res) => {
       // res.json({ errors: objError.errors });
       return res.json({ validationErrors: objError.errors });
     }
-    const isEmail = await authUserText.findOne({ email: req.body.email });
+    const isEmail = await AuthUser.findOne({ email: req.body.email });
     if (isEmail) {
       return res.json({ isExistingEmail: "the Email is already exist" });
       // res.redirect("/signup");
     }
-    const user = await authUserText.create(req.body);
+    const user = await AuthUser.create(req.body);
     // console.log(req.body);
     // console.log(user);
     var token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
@@ -98,34 +98,36 @@ const user_signup_post = async (req, res) => {
 const user_index_post = async (req, res) => {
   let decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
   try {
-    const user = await authUserText.updateOne(
+    // 1- create text in the Text collection
+    const newText = await Text.create({
+      title: req.body.title,
+      text: req.body.text,
+      wordsTotal: req.body.wordsTotal,
+      withoutRepetition: req.body.withoutRepetition,
+      user: decoded.id,
+    });
+    // 2- add the text id to the user
+    await AuthUser.updateOne(
       { _id: decoded.id },
-      {
-        $push: {
-          texts: {
-            title: req.body.title,
-            text: req.body.text,
-            wordsTotal: req.body.wordsTotal,
-            withoutRepetition: req.body.withoutRepetition,
-          },
-        },
-      }
+      { $push: { texts: newText._id } },
     );
     res.redirect("/home");
-  } catch {}
+  } catch {
+    error;
+  }
+  {
+    res.json({ error: "Error during adding text. Please try again." });
+  }
 };
 
 // delete text
 const user_delete_text = async (req, res) => {
   const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
   try {
-    await authUserText.updateOne(
+    await Text.findByIdAndDelete(req.params.id);
+    await AuthUser.updateOne(
       { _id: decoded.id },
-      {
-        $pull: {
-          texts: { _id: req.params.id },
-        },
-      }
+      { $pull: { texts: req.params.id } },
     );
     res.redirect("/home");
   } catch (error) {
@@ -133,12 +135,11 @@ const user_delete_text = async (req, res) => {
   }
 };
 
-// edit text get
+// edit text get (show text details in the edit page)
 const user_edit_get = async (req, res) => {
   const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
   try {
-    const user = await authUserText.findOne({ _id: decoded.id });
-    const textToEdit = user.texts.id(req.params.id);
+    const textToEdit = await Text.findById(req.params.id);
     res.render("edit", { text: textToEdit });
   } catch (error) {
     res.json({ error: "Error during editing text. Please try again." });
@@ -149,11 +150,11 @@ const user_edit_get = async (req, res) => {
 const user_edit_put = async (req, res) => {
   const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
   try {
-    const user = await authUserText.findOne({ _id: decoded.id });
-    const textToEdit = user.texts.id(req.params.id);
-    textToEdit.title = req.body.title;
-    textToEdit.text = req.body.text;
-    await user.save();
+    await Text.findByIdAndUpdate(req.params.id, {
+      title: req.body.title,
+      text: req.body.text,
+    });
+
     res.redirect("/home");
   } catch (error) {
     res.json({ error: "Error during updating text. Please try again." });
@@ -164,7 +165,7 @@ const user_edit_put = async (req, res) => {
 const user_search_post = async (req, res) => {
   try {
     const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
-    const user = await authUserText.findOne({ _id: decoded.id });
+    const texts = await Text.find({ user: decoded.id });
 
     const escapeRegex = (string) =>
       string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -179,8 +180,8 @@ const user_search_post = async (req, res) => {
       });
     }
 
-    const filteredTexts = user.texts.filter(
-      (text) => regex.test(text.text) || regex.test(text.title)
+    const filteredTexts = texts.filter(
+      (text) => regex.test(text.text) || regex.test(text.title),
     );
 
     res.render("search", {
@@ -196,7 +197,7 @@ const user_search_post = async (req, res) => {
 //  test get endpoint
 const user_test_get = async (req, res) => {
   const decoded = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_KEY);
-  const user = await authUserText.findOne({ _id: decoded.id });
+  const user = await AuthUser.findOne({ _id: decoded.id });
   const searchTerm = "das";
   const filteredArr = user.texts.filter((el) => {
     return el.text.includes(searchTerm) || el.title.includes(searchTerm);

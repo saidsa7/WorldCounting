@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const authUserText = require("../models/authUser");
+const authUser = require("../models/authUser");
 
 const requireAuth = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -24,7 +24,7 @@ const checkIfUser = (req, res, next) => {
         res.locals.user = null;
         next();
       } else {
-        const loginUser = await authUserText.findById(decoded.id);
+        const loginUser = await authUser.findById(decoded.id);
         // console.log("decoded object : ", decoded);
         // console.log("big object from DB : ", loginUser);
         res.locals.user = loginUser;

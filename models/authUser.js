@@ -11,7 +11,7 @@ const authUserSchema = new Schema({
   texts: [
     {
       type: Schema.Types.ObjectId,
-      ref: "texts",
+      ref: "Text",
     },
   ],
 });
@@ -25,8 +25,8 @@ authUserSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-const AuthUserText = mongoose.model("User", authUserSchema);
-module.exports = AuthUserText;
+const AuthUser = mongoose.model("User", authUserSchema);
+module.exports = AuthUser;
 
 // ss
 // im now in the refactor-model (branch)

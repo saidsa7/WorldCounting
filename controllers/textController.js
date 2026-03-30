@@ -1,5 +1,5 @@
 // controllers/textController.js
-const AuthUserText = require("../models/AuthUserText");
+const Text = require("../models/texts");
 const verbMap = require("../utils/verbMap");
 const lemmatizer = require("wink-lemmatizer");
 
@@ -15,24 +15,20 @@ exports.analyzeUserText = async (req, res) => {
 
     // تطبيع الكلمات (lemmatize + verbMap)
     const normalizedWords = words.map(
-      (word) => verbMap[word] || lemmatizer.de.lemmatize(word)
+      (word) => verbMap[word] || lemmatizer.de.lemmatize(word),
     );
 
     // إزالة التكرار
     const uniqueWords = [...new Set(normalizedWords)];
 
     // حفظ النص في الـ DB
-    const user = await AuthUserText.findById(userId);
-    if (!user) return res.status(404).json({ msg: "User not found" });
-
-    user.texts.push({
+    const newText = await Text.create({
+      user: userId,
       title,
       text,
       wordsTotal: normalizedWords.length.toString(),
       withoutRepetition: uniqueWords.length.toString(),
     });
-
-    await user.save();
 
     res.json({
       msg: "Text analyzed and saved",
